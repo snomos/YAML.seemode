@@ -1,3 +1,9 @@
+h1. YAML.seemode
+
+YAML.seemode is a YAML syntax definition for SubEthaEdit & Coda. This is a rewrite of the original code to work with newer versions of SubEthaEdit. Original README text below.
+
+--
+
 h1. YAML.mode
 
 YAML.mode is a YAML syntax definition for SubEthaEdit & Coda. This is a work in progress so please be patient ;)
