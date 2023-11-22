@@ -18,6 +18,7 @@
 
         <!-- optional to add spelling-dictionary autocomplete words -->
         <autocompleteoptions use-spelling-dictionary="yes" />
+		<folding toplevel='1' />
 
         <!-- 
         The <charsintokens> and the <charsdelimitingtokens> instruct the syntax highlighter
@@ -80,7 +81,7 @@
                 
         -->    
     
-        <default id="Base" color="#f00" inverted-color="#0f0">
+        <default id="Base" scope="meta.default">
 
             <!-- 
             The <keywords> tag specifies keyword groups within the current state.
@@ -107,7 +108,7 @@
                     no      Don't add to autocomplete dictionary
             -->    
 
-            <keywords id="Keywords" color="#6C0540" casesensitive="no" useforautocomplete="yes">
+            <keywords id="Keywords" scope="keyword" casesensitive="no" useforautocomplete="yes">
             
                 <!-- 
                     <string> tags specify plain text to be colored. If your tag does not
@@ -125,11 +126,11 @@
                     The example colors digits prefixed by foo. (only the digits)             
                 -->    
 
-				<regex>^(.*?):</regex>
+				<regex>^\s*([^\s]?):</regex>
 
             </keywords>
 
-            <keywords id="Other keywords" color="#400080" font-weight="bold" font-style="italic">
+            <keywords id="Other keywords" cscope="keyword">
       				<string>de_DE</string>
       				<string>en_GB</string>
             </keywords>
@@ -147,19 +148,29 @@
             -->    
     
     
-            <state id="Comment" color="#236E25" font-style="italic">
+            <state id="Comment" scope="comment.line">
                 <begin><regex>(?:^|\s)#</regex></begin>
                 <end><regex>[\n\r]</regex></end>
             </state>
 
-            <state id="String" color="#760f15">
+            <!--state id="String" scope="string">
                 <begin><regex>"</regex></begin>
                 <end><regex>(((?&lt;!\\)(\\\\)*)|^)"</regex></end>
-                <keywords id="Other keywords" color="#400080" font-style="italic">
+                <keywords id="Other keywords" scope="string">
                   <string>foobar</string>
                 </keywords>
+            </state-->
+
+            <state id="Variable" scope="structured.variable">
+                <begin><regex>&amp;(?:^|\s)</regex></begin>
+                <end><regex>[\s\n\r]</regex></end>
             </state>
 
+			<state id="Multiline String" foldable="yes" scope="string">
+				<begin><regex>^(?'startingwhitespace'[ ]*)[^: ]+\: \|</regex></begin>
+				<end><regex>(?:\r?\n|\r)(?=(?:\r?\n|\r)(?:\r?\n|\r)\s*\S+\:[^|](?:\r?\n|\r)(?#see-insert-start-group:startingwhitespace)\S|(?#see-insert-start-group:startingwhitespace)\S|(?:\r?\n|\r)(?:\r?\n|\r)\S|(?:\r?\n|\r)\S|\S)</regex></end>
+				<import/>
+			</state>
             <!-- 
                 The <import> tag lets you import substates and keywords from other modes.
                 It features the following attributes, all optional if not noted otherwise:
@@ -177,18 +188,18 @@
                   
             -->    
 
-            <state id="Inline Javascript" color="#000" usesymbolsfrommode="Javascript" useautocompletefrommode="Javascript">
+            <state id="Inline Javascript" scope="meta.codeblock.yaml" useautocompletefrommode="Javascript">
                 <begin><regex>&lt;(?=script)</regex></begin>
                 <end><regex>/script&gt;</regex></end>
     
                 <import mode="Javascript" />
 
-                <keywords id="Script Tags"  color="#881280" font-style="italic">
+                <keywords id="Script Tags"  scope="keyword">
                     <regex>(\A&lt;\Z)</regex>
                     <regex>(&lt;/script[^&gt;]*&gt;)</regex>
                 </keywords>
 
-                <state id="Opening Script Tag" color="#881280" font-style="italic" usesymbolsfrommode="HTML" useautocompletefrommode="HTML">
+                <state id="Opening Script Tag" scope="meta.codeblock.Javascript" usesymbolsfrommode="HTML" useautocompletefrommode="HTML">
                     <begin><regex>\Ascript</regex></begin>
                     <end><regex>&gt;</regex></end>
         
@@ -212,17 +223,18 @@
             -->    
             <state-link state="PHP" mode="PHP-HTML" />
 
-            <state id="Ruby" color="#000000" inverted-color="#ffffff"  font-style="normal" font-weight="normal" usesymbolsfrommode="Ruby" useautocompletefrommode="Ruby">
+            <state id="Ruby" scope="meta.codeblock.yaml" usesymbolsfrommode="Ruby" useautocompletefrommode="Ruby">
                 <begin><regex>(?:&lt;%=?)</regex></begin>
                 <end><regex>(?:-?%&gt;)</regex></end>
                 <import mode="Ruby" />
 
-                <keywords id="ERB Delimiter" color="#d00000" inverted-color="#ff2f2f"  font-style="normal" font-weight="normal" useforautocomplete="no">
+                <keywords id="ERB Delimiter" scope="keyword" useforautocomplete="no">
                     <regex>(-?%&gt;)</regex>
                     <regex>(&lt;%=?)</regex>
                 </keywords>
             </state>
 
+            <import keywords-only='yes' mode='Base' state='EmailAndURLContainerState' />
         </default>
         
     </states>
